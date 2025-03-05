@@ -1,56 +1,83 @@
 import logging
 import streamlit as st
 from langchain_community.chat_models import ChatMaritalk
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts.chat import ChatPromptTemplate
+from langchain_core.messages import HumanMessage
+from langchain.schema import ChatMessage
+from langchain.callbacks.base import BaseCallbackHandler
 
-# Logger config
+# Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s [%(levelname)s] %(message)s')
 logger = logging.getLogger(__name__)
 
-# Streamlit config
-st.set_page_config(page_title="🦜🔗 Quickstart App")
-st.title('🦜🔗 Quickstart App')
+# Configure Streamlit
+st.set_page_config(page_title="🦜 Capiara Code Mentor")
+st.title('🦜 Capiara Code Mentor')
 
-maritalk_api_key = st.sidebar.text_input('Maritalk API Key')
+class StreamHandler(BaseCallbackHandler):
+    """Handles real-time streaming of LLM-generated tokens in Streamlit."""
+    def __init__(self, container):
+        self.container = container
+        self.text = ""
 
-def generate_response(input_text):
-    if not maritalk_api_key:
-        logger.warning("User did not provide API key")
-        st.warning("Please provide your API key", icon="⚠")
-        return
+    def on_llm_new_token(self, token: str, **kwargs) -> None:
+        """Appends new tokens to the response and updates the UI dynamically."""
+        self.text += token
+        self.container.markdown(self.text)
 
-    try:
-        logger.info("Generating response for input")
 
+def get_maritalk_api_key() -> str:
+    """Retrieves the Maritalk API key from the sidebar input field."""
+    with st.sidebar:
+        return st.text_input("Maritalk API Key", type="default")
+
+
+def initialize_chat_history():
+    """Initializes chat history in session state if not already present."""
+    if "messages" not in st.session_state:
+        st.session_state["messages"] = [ChatMessage(role="assistant", content="How can I help you?")]
+
+
+def display_chat_history():
+    """Displays the chat history stored in session state."""
+    for msg in st.session_state.messages:
+        st.chat_message(msg.role).write(msg.content)
+
+
+def process_user_input(prompt: str, api_key: str):
+    """Processes user input by sending it to the Maritalk model and streaming the response."""
+    st.session_state.messages.append(ChatMessage(role="user", content=prompt))
+    st.chat_message("user").write(prompt)
+
+    if not api_key:
+        st.info("Please add your Maritalk API key to continue.")
+        st.stop()
+
+    with st.chat_message("assistant"):
+        stream_handler = StreamHandler(st.empty())
+        
         llm = ChatMaritalk(
             model="sabia-3",
-            api_key=maritalk_api_key,
+            api_key=api_key,
             max_tokens=1000,
+            stream=True,
+            callbacks=[stream_handler],
         )
 
-        output_parser = StrOutputParser()
-        chat_prompt = ChatPromptTemplate.from_messages(
-            [
-                ("system", "You are a helpful assistant."),
-                ("human", input_text)
-            ]
-        )
-        chain = chat_prompt | llm | output_parser
+        messages = [HumanMessage(content=prompt)]
+        response = ""
 
-        response = chain.invoke({})
+        for chunk in llm.stream(messages):
+            response += chunk.content
 
+        st.session_state.messages.append(ChatMessage(role="assistant", content=response))
         logger.info("Response generated successfully")
-        st.info(response)
 
-    except Exception as e:
-        logger.error(f"An error occurred while generating response: {e}")
-        st.error("An error occurred while generating response.")
 
-with st.form('my_form'):
-    text = st.text_area('Enter text:', 'How can I help you?')
-    submitted = st.form_submit_button('Submit')
+# Main application logic
+if __name__ == "__main__":
+    maritalk_api_key = get_maritalk_api_key()
+    initialize_chat_history()
+    display_chat_history()
     
-    if submitted:
-        logger.info("User submitted text for generating response")
-        generate_response(text)
+    if prompt := st.chat_input():
+        process_user_input(prompt, maritalk_api_key)
