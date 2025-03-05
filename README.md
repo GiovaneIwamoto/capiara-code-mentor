@@ -2,6 +2,11 @@
 
 # Installation Guide
 
+- Install required dependencies
+```shell
+pip install -r requirements.txt
+```
+
 - Run Streamlit
 ```shell
 streamlit run app.py
