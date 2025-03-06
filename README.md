@@ -11,3 +11,13 @@ pip install -r requirements.txt
 ```shell
 streamlit run app.py
 ```
+# Documentation
+
+- Langchain Conceptual Guide
+https://python.langchain.com/v0.2/docs/concepts/
+
+- Langchain Callbacks
+https://python.langchain.com/v0.2/docs/concepts/#callbacks
+
+- Langchain Streaming
+https://python.langchain.com/v0.2/docs/concepts/#streaming
