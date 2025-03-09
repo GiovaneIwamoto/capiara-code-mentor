@@ -6,13 +6,17 @@ from langchain_core.messages import HumanMessage
 from langchain.schema import ChatMessage
 from langchain.callbacks.base import BaseCallbackHandler
 
+st.set_page_config(page_title="Capiara Algorithm Mentor", page_icon="", layout="wide")
+
 # Configure logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s [%(levelname)s] %(message)s')
+logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
-# Configure Streamlit
-st.set_page_config(page_title="Capiara Algorithm Mentor", layout="wide")
-st.title(":material/network_intel_node: Capiara Algorithm Mentor")
+# Image banner container
+# with st.container():
+#     st.image("images/banner.png", use_container_width=False, output_format="PNG")
+
+st.image("images/banner.png")
 
 class StreamHandler(BaseCallbackHandler):
     """Handles real-time streaming of LLM-generated tokens in Streamlit."""
