@@ -21,3 +21,9 @@ https://python.langchain.com/v0.2/docs/concepts/#callbacks
 
 - Langchain Streaming
 https://python.langchain.com/v0.2/docs/concepts/#streaming
+
+- Message Persistence
+https://python.langchain.com/docs/tutorials/chatbot/#message-persistence
+
+- Managing Conversation History
+https://python.langchain.com/docs/tutorials/chatbot/#managing-conversation-history
