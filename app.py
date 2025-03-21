@@ -1,9 +1,17 @@
+from langchain.schema import ChatMessage
+
 import logging
 import streamlit as st
+
 from langchain_community.chat_models import ChatMaritalk
 from langchain_community.chat_models.maritalk import MaritalkHTTPError
-from langchain_core.messages import HumanMessage
-from langchain.schema import ChatMessage
+
+from langchain_core.messages import HumanMessage, AIMessage
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+
+from langgraph.graph import START, MessagesState, StateGraph
+from langgraph.checkpoint.memory import MemorySaver
+
 from langchain.callbacks.base import BaseCallbackHandler
 
 st.set_page_config(page_title="Capiara Algorithm Mentor", page_icon="", layout="wide")
@@ -67,25 +75,28 @@ def process_user_input(prompt: str, api_key: str):
         )
 
         messages = [HumanMessage(content=prompt)]
+
         # Test API key by fetching the first response
+        # This fix calling assistant and after that calling the stream
         next(llm.stream(messages))
+
+        with st.chat_message("assistant"):
+            stream_handler = StreamHandler(st.empty())
+
+            llm.callbacks = [stream_handler]
+
+            response = ""
+            for chunk in llm.stream(messages):
+                response += chunk.content
+
+            st.session_state.messages.append(ChatMessage(role="assistant", content=response))
+            logger.info("Response generated successfully")
 
     except MaritalkHTTPError as e:
         logger.error(f"API Error: {e}")
         st.error("Invalid Maritalk API key, please enter a valid one.", icon=":material/key_off:")
         st.stop()
 
-    with st.chat_message("assistant"):
-        stream_handler = StreamHandler(st.empty())
-
-        llm.callbacks = [stream_handler]
-
-        response = ""
-        for chunk in llm.stream(messages):
-            response += chunk.content
-
-        st.session_state.messages.append(ChatMessage(role="assistant", content=response))
-        logger.info("Response generated successfully")
 
 # Main application logic
 if __name__ == "__main__":
