@@ -8,17 +8,31 @@ from langchain_core.messages import HumanMessage, AIMessage, trim_messages
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langgraph.graph import START, MessagesState, StateGraph
 from langgraph.checkpoint.memory import MemorySaver
+from rich.logging import RichHandler
+
+def format_chat_messages(messages: list) -> str:
+    """
+    Formats a list of chat message objects into a readable string representation.
+
+    Args:
+        messages (list): A list of message objects. Each object is expected to have 
+                        the attributes `content` and `id`, and optionally `role`.
+
+    Returns:
+        str: A formatted string where each message is represented on a new line.
+    """
+    formatted = []
+    for msg in messages:
+        role = msg.role if hasattr(msg, "role") else msg.__class__.__name__
+        formatted.append(f"[{role}] {msg.content} (ID: {msg.id})")
+    return "\n".join(formatted)
 
 # Configure Streamlit page settings
 st.set_page_config(page_title="Capiara Algorithm Mentor", page_icon="", layout="wide")
 
 # Configure logging
-logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)s] %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s",handlers=[RichHandler(rich_tracebacks=True, markup=True)])
 logger = logging.getLogger(__name__)
-
-# Image banner container
-# with st.container():
-#     st.image("images/banner.png", use_container_width=False, output_format="PNG")
 
 # Display image banner
 st.image("images/banner.png")
@@ -41,13 +55,13 @@ def get_maritalk_api_key() -> str:
         return st.text_input("Maritalk API Key", type="default")
 
 
-def initialize_chat_history():
+def initialize_chat_history() -> None:
     """Initializes chat history in session state if not already present."""
     if "messages" not in st.session_state:
         st.session_state["messages"] = [ChatMessage(role="assistant", content="How can I help you?")]
 
 
-def display_chat_history():
+def display_chat_history() -> None:
     """Displays the chat history stored in session state."""
     for msg in st.session_state["messages"]:
         role = "user" if isinstance(msg, HumanMessage) else "assistant"
@@ -65,14 +79,31 @@ prompt_template = ChatPromptTemplate.from_messages(
 if "memory" not in st.session_state:
     st.session_state["memory"] = MemorySaver()
 
-def call_model(state: MessagesState):
-    """Calls the Maritalk model to generate a response."""
+def call_model(state: MessagesState) -> dict:
+    """
+    Calls the Maritalk model to generate a response based on the provided message state.
+
+    This function interacts with the Maritalk API to generate a response using the specified
+    language model. It ensures the API key is available, trims the input messages to fit
+    within token limits, and streams the model's response back to the user.
+
+    Args:
+        state (MessagesState): A dictionary-like object containing the current state of messages.
+            It should include a "messages" key with a list of message objects.
+
+    Returns:
+        dict: A dictionary containing the updated message history under the "messages" key.
+
+    Raises:
+        StopExecution: If the API key is not provided in the session state.
+    """
     api_key = st.session_state.get("api_key")
 
     if not api_key:
         st.info("Please add your Maritalk API key to continue.", icon=":material/passkey:")
         st.stop()
 
+    # Initialize the Maritalk chat model
     llm = ChatMaritalk(
         model="sabia-3",
         api_key=api_key,
@@ -81,6 +112,7 @@ def call_model(state: MessagesState):
         callbacks=[],
     )
 
+    # Trim messages to fit within token limits
     trimmer = trim_messages(
         max_tokens=100,
         strategy="last",
@@ -91,11 +123,12 @@ def call_model(state: MessagesState):
     )
 
     trimmed_messages = trimmer.invoke(state["messages"])
-    logger.info(f"Trimmed messages: {trimmed_messages}")
+    logger.info(f"\nTrimmed messages:\n\n{format_chat_messages(trimmed_messages)}\n")
 
     prompt = prompt_template.invoke(
         {"messages": trimmed_messages}
     )
+    logger.info(f"\nChat prompt:\n\n{prompt}\n")
 
     with st.chat_message("assistant"):
         stream_handler = StreamHandler(st.empty())
@@ -115,8 +148,18 @@ workflow.add_node("model", call_model)
 
 app = workflow.compile(checkpointer=st.session_state["memory"])
 
-def process_user_input(prompt: str, api_key: str):
-    # Add Docstring
+def process_user_input(prompt: str, api_key: str) -> None:
+    """
+    Processes user input in a chatbot interface using the Maritalk API.
+
+    This function handles user interactions by appending messages to the session state, 
+    validating the API key, and invoking the chatbot API to generate responses. 
+
+    Args:
+        prompt (str): The user's input message.
+        api_key (str): The API key required to authenticate with the Maritalk service.
+    """
+    
     # FIXME: Messages append is causing the chat history to be duplicated
     st.session_state.messages.append(ChatMessage(role="user", content=prompt))
     st.chat_message("user").write(prompt)
@@ -138,7 +181,7 @@ def process_user_input(prompt: str, api_key: str):
 
         # Update session state with the new chat history
         st.session_state["messages"] = output["messages"]
-        logger.info(f"Chat history: {output['messages']}")
+        logger.info(f"\nChat history:\n\n{format_chat_messages(output['messages'])}\n")
 
     except MaritalkHTTPError as e:
         logger.error(f"API Error: {e}")
