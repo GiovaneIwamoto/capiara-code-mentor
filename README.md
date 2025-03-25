@@ -27,3 +27,6 @@ https://python.langchain.com/docs/tutorials/chatbot/#message-persistence
 
 - Managing Conversation History
 https://python.langchain.com/docs/tutorials/chatbot/#managing-conversation-history
+
+- Trim Messages
+https://python.langchain.com/api_reference/core/messages/langchain_core.messages.utils.trim_messages.html
