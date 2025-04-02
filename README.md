@@ -72,8 +72,23 @@ https://docs.maritaca.ai/pt/rate-limits
 
 https://docs.maritaca.ai/pt/embeddings+Sabia-3+RAG
 
+
+# Documentation - Ollama
+
+- Meta Llama 3
+
+https://ollama.com/library/llama3/blobs/6a0746a1ec1a
+
+```shell
+ollama run llama3
+```
+
 # Info - AI Powered Search
 
 - The Basics of AI-Powered Vector Search
 
 https://cameronrwolfe.substack.com/p/the-basics-of-ai-powered-vector-search?utm_source=profile&utm_medium=reader2
+
+- LLM Powered Autonomous Agents
+
+https://lilianweng.github.io/posts/2023-06-23-agent/
