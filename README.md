@@ -58,6 +58,14 @@ https://python.langchain.com/docs/concepts/vectorstores/
 
 https://python.langchain.com/docs/concepts/embedding_models/
 
+- Ollama Embeddings
+
+https://python.langchain.com/docs/integrations/text_embedding/ollama/
+
+- Pinecone Vector Store
+
+https://python.langchain.com/api_reference/pinecone/vectorstores/langchain_pinecone.vectorstores.PineconeVectorStore.html#langchain_pinecone.vectorstores.PineconeVectorStore
+
 # Documentation - Maritalk
 
 - Models
@@ -82,6 +90,23 @@ https://ollama.com/library/llama3/blobs/6a0746a1ec1a
 ```shell
 ollama run llama3
 ```
+- Nomic Embed Text
+
+https://ollama.com/library/nomic-embed-text
+
+```shell
+ollama pull nomic-embed-text
+```
+
+# Documentation - Nomic
+
+- HuggingFace 
+
+https://huggingface.co/nomic-ai/nomic-embed-text-v1.5
+
+- Blog
+
+https://www.nomic.ai/blog/posts/nomic-embed-text-v1
 
 # Info - AI Powered Search
 
@@ -92,3 +117,13 @@ https://cameronrwolfe.substack.com/p/the-basics-of-ai-powered-vector-search?utm_
 - LLM Powered Autonomous Agents
 
 https://lilianweng.github.io/posts/2023-06-23-agent/
+
+
+# About 
+
+| **Use Case**          | **chunk_size**    | **chunk_overlap** | **Justification** |
+|-----------------------|-------------------|-------------------|--------------------|
+| **Short Queries**     | 500 - 1000        | 100 - 200         | Improves semantic search accuracy without overly fragmenting the context. |
+| **Long Documents**    | 1000 - 2000       | 200 - 300         | Prevents context loss when splitting large documents. |
+| **Source Code**       | 300 - 600         | 50 - 100          | Smaller chunks help avoid losing critical information. |
+
