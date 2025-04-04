@@ -42,6 +42,8 @@ https://python.langchain.com/api_reference/core/messages/langchain_core.messages
 
 https://python.langchain.com/docs/tutorials/rag/#setup
 
+https://python.langchain.com/docs/tutorials/qa_chat_history/
+
 - Retrieval Concept
 
 https://python.langchain.com/docs/concepts/retrieval/
@@ -66,6 +68,22 @@ https://python.langchain.com/docs/integrations/text_embedding/ollama/
 
 https://python.langchain.com/api_reference/pinecone/vectorstores/langchain_pinecone.vectorstores.PineconeVectorStore.html#langchain_pinecone.vectorstores.PineconeVectorStore
 
+- Recursive Text Splitter
+
+https://python.langchain.com/docs/how_to/recursive_text_splitter/
+
+- Document Base
+
+https://python.langchain.com/api_reference/core/documents/langchain_core.documents.base.Document.html
+
+- Tool Calling
+
+https://python.langchain.com/docs/concepts/tool_calling/
+
+- Tool Artifacts
+
+https://python.langchain.com/docs/how_to/tool_artifacts/
+
 # Documentation - Maritalk
 
 - Models
@@ -80,6 +98,9 @@ https://docs.maritaca.ai/pt/rate-limits
 
 https://docs.maritaca.ai/pt/embeddings+Sabia-3+RAG
 
+- Tool Calling
+
+https://docs.maritaca.ai/pt/chamada-funcao
 
 # Documentation - Ollama
 
@@ -107,6 +128,10 @@ https://huggingface.co/nomic-ai/nomic-embed-text-v1.5
 - Blog
 
 https://www.nomic.ai/blog/posts/nomic-embed-text-v1
+
+# Documentation - LangSmith
+
+https://docs.smith.langchain.com
 
 # Info - AI Powered Search
 
