@@ -143,6 +143,19 @@ https://cameronrwolfe.substack.com/p/the-basics-of-ai-powered-vector-search?utm_
 
 https://lilianweng.github.io/posts/2023-06-23-agent/
 
+# Documentation - Prompt Engineering 
+
+- AWS Prompt Engineering Best Practices
+
+https://docs.aws.amazon.com/prescriptive-guidance/latest/llm-prompt-engineering-best-practices/introduction.html
+
+- AWS Common prompt injection attacks
+
+https://docs.aws.amazon.com/prescriptive-guidance/latest/llm-prompt-engineering-best-practices/common-attacks.html
+
+- IBM Prompt Injection
+
+https://www.ibm.com/think/topics/prompt-injection
 
 # About 
 
