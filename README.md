@@ -80,6 +80,8 @@ https://python.langchain.com/api_reference/core/documents/langchain_core.documen
 
 https://python.langchain.com/docs/concepts/tool_calling/
 
+https://blog.langchain.dev/tool-calling-with-langchain/
+
 - Tool Artifacts
 
 https://python.langchain.com/docs/how_to/tool_artifacts/
@@ -164,4 +166,3 @@ https://www.ibm.com/think/topics/prompt-injection
 | **Short Queries**     | 500 - 1000        | 100 - 200         | Improves semantic search accuracy without overly fragmenting the context. |
 | **Long Documents**    | 1000 - 2000       | 200 - 300         | Prevents context loss when splitting large documents. |
 | **Source Code**       | 300 - 600         | 50 - 100          | Smaller chunks help avoid losing critical information. |
-
