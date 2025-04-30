@@ -33,7 +33,7 @@ def configure_sidebar() -> dict:
         st.session_state['embedding_model'] = embedding_model
                 
         # Settings for indexing mode
-        index_expander = st.expander("Indexing", expanded=True)
+        index_expander = st.expander("Indexing", expanded=False)
 
         # Web indexing section
         web_url = index_expander.text_input("Web Link", placeholder="https://example.com")
