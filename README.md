@@ -86,6 +86,10 @@ https://blog.langchain.dev/tool-calling-with-langchain/
 
 https://python.langchain.com/docs/how_to/tool_artifacts/
 
+- Structured Output
+
+https://python.langchain.com/docs/how_to/structured_output/
+
 # Documentation - Maritalk
 
 - Models
