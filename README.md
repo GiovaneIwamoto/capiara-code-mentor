@@ -90,6 +90,10 @@ https://python.langchain.com/docs/how_to/tool_artifacts/
 
 https://python.langchain.com/docs/how_to/structured_output/
 
+- Chat OpenAI
+
+https://python.langchain.com/docs/integrations/chat/openai/
+
 # Documentation - Maritalk
 
 - Models
