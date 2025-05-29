@@ -8,30 +8,27 @@ def configure_sidebar() -> dict:
         keys_expander = st.expander("Settings", expanded=True)
 
         # Variables for LLM API key and Pinecone configuration
-        llm_api_key = keys_expander.text_input("Maritalk API Key", type="password")
-        pinecone_api_key = keys_expander.text_input("Pinecone API Key", type="password")
-        pinecone_index_name = keys_expander.text_input("Pinecone Index Name")
-        embedding_model = keys_expander.text_input("Ollama Embedding Model", value="nomic-embed-text")
+        st.session_state['llm_api_key'] = keys_expander.text_input("Maritalk API Key", type="password")
+        st.session_state['pinecone_api_key'] = keys_expander.text_input("Pinecone API Key", type="password")
+        st.session_state["pinecone_index_name"] = keys_expander.text_input("Pinecone Index Name")
+        st.session_state["embedding_model"] = keys_expander.text_input("Ollama Embedding Model")
 
-        # Initialization of session state variables
-        if 'llm_api_key' not in st.session_state:
-            st.session_state['llm_api_key'] = llm_api_key
-
-        if 'pinecone_api_key' not in st.session_state:
-            st.session_state['pinecone_api_key'] = pinecone_api_key  
-
-        if 'pinecone_index_name' not in st.session_state:
-            st.session_state['pinecone_index_name'] = pinecone_index_name
+        if not st.session_state['llm_api_key']:
+            st.session_state['llm_api_key'] = st.secrets["llm_api_key"]
         
-        if 'embedding_model' not in st.session_state:
-            st.session_state['embedding_model'] = embedding_model
+        if not st.session_state['pinecone_api_key']:
+            st.session_state['pinecone_api_key'] = st.secrets["pinecone_api_key"]
+        
+        if not st.session_state["pinecone_index_name"]:
+            st.session_state["pinecone_index_name"] = st.secrets["pinecone_index_name"]
+        
+        if not st.session_state["embedding_model"]:
+            st.session_state["embedding_model"] = st.secrets["embedding_model"]
 
-        # Update session state variables   
-        st.session_state['llm_api_key'] = llm_api_key
-        st.session_state['pinecone_api_key'] = pinecone_api_key  
-        st.session_state['pinecone_index_name'] = pinecone_index_name
-        st.session_state['embedding_model'] = embedding_model
-                
+        pinecone_api_key = st.session_state['pinecone_api_key']
+        pinecone_index_name = st.session_state["pinecone_index_name"]
+        embedding_model = st.session_state["embedding_model"]
+
         # Settings for indexing mode
         index_expander = st.expander("Indexing", expanded=False)
 
