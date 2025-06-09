@@ -11,7 +11,8 @@ def configure_sidebar() -> dict:
         st.session_state['llm_api_key'] = keys_expander.text_input("Maritalk API Key", type="password")
         st.session_state['pinecone_api_key'] = keys_expander.text_input("Pinecone API Key", type="password")
         st.session_state["pinecone_index_name"] = keys_expander.text_input("Pinecone Index Name")
-        st.session_state["embedding_model"] = keys_expander.text_input("Ollama Embedding Model")
+        st.session_state["embedding_model"] = keys_expander.text_input("OpenAI Embedding Model", placeholder="text-embedding-3-small")
+        st.session_state["openai_api_key"] = keys_expander.text_input("OpenAI API Key", type="password")
 
         if not st.session_state['llm_api_key']:
             st.session_state['llm_api_key'] = st.secrets["llm_api_key"]
@@ -25,12 +26,16 @@ def configure_sidebar() -> dict:
         if not st.session_state["embedding_model"]:
             st.session_state["embedding_model"] = st.secrets["embedding_model"]
 
+        if not st.session_state["openai_api_key"]:
+            st.session_state["openai_api_key"] = st.secrets["openai_api_key"]
+
         pinecone_api_key = st.session_state['pinecone_api_key']
         pinecone_index_name = st.session_state["pinecone_index_name"]
         embedding_model = st.session_state["embedding_model"]
+        openai_api_key = st.session_state["openai_api_key"]
 
         # Settings for indexing mode
-        index_expander = st.expander("Indexing", expanded=False)
+        index_expander = st.expander("Indexing", expanded=True)
 
         # Web indexing section
         web_url = index_expander.text_input("Web Link", placeholder="https://example.com")
@@ -42,7 +47,7 @@ def configure_sidebar() -> dict:
 
     # Validate required fields for web indexing
     if web_indexing_enabled:
-        if not web_url or not pinecone_api_key or not pinecone_index_name or not embedding_model:
+        if not web_url or not pinecone_api_key or not pinecone_index_name or not embedding_model or not openai_api_key:
             st.toast(
                 "Web Indexing failed — you must provide a valid URL and fill in all the required fields.",
                 icon=":material/assignment_late:"
@@ -53,7 +58,7 @@ def configure_sidebar() -> dict:
 
     # Validate required fields for file indexing
     if file_indexing_enabled:
-        if not uploaded_files or not pinecone_api_key or not pinecone_index_name or not embedding_model:
+        if not uploaded_files or not pinecone_api_key or not pinecone_index_name or not embedding_model or not openai_api_key:
             st.toast(
                 "File indexing failed — please upload a file and fill in all the required fields.",
                 icon=":material/assignment_late:"
@@ -70,6 +75,7 @@ def configure_sidebar() -> dict:
         "pinecone_api_key": pinecone_api_key,
         "pinecone_index_name": pinecone_index_name,
         "embedding_model": embedding_model,
+        "openai_api_key": openai_api_key,
     }
 
     return indexing_mode_config
