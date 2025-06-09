@@ -9,7 +9,6 @@ langchain-community
 
 # LangChain model integrations
 langchain-openai
-langchain-ollama
 langchain-pinecone
 
 # LangChain extensions
